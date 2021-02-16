@@ -28,7 +28,7 @@ function registerValue(target: Object, key: string | symbol) {
     throw new Error(`[moon] - @Value cannot inject generic type`)
   }
   if (p) {
-    const m = p.lastIndexOf(':')
+    const m = p.indexOf(':')
     const pre = m > -1 ? env(p.substring(0, m)) : env(p)
     if (pre !== null && pre !== void 0) {
       const newVal = transformData(pre, types)
