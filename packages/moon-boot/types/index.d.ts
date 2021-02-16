@@ -46,11 +46,11 @@ export function getLogger(path: string): Logger
 export interface HookOpt {
   order?: number
 }
-export function AfterScan(stage: string): (opt?: HookOpt) => MethodDecorator
-export function AfterEnv(stage: string): (opt?: HookOpt) => MethodDecorator
-export function AfterLog(stage: string): (opt?: HookOpt) => MethodDecorator
-export function BeforeStart(stage: string): (opt?: HookOpt) => MethodDecorator
-export function AfterStart(stage: string): (opt?: HookOpt) => MethodDecorator
+export function AfterScan(opt?: HookOpt): MethodDecorator
+export function AfterEnv(opt?: HookOpt): MethodDecorator
+export function AfterLog(opt?: HookOpt): MethodDecorator
+export function BeforeStart(opt?: HookOpt): MethodDecorator
+export function AfterStart(opt?: HookOpt): MethodDecorator
 
 /**
  * Bean Module
@@ -76,3 +76,5 @@ export function BeforeBean(
 export function Condition(
   cb: (env: Env) => boolean | undefined | Promise<boolean | undefined>
 ): ClassDecorator
+
+export declare const env: Env

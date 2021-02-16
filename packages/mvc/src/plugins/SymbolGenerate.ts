@@ -1,0 +1,5 @@
+export const METHOD_PATH = Symbol('controller_method_path')
+export const METHOD_NAME = Symbol('controller_method_name')
+export const METHOD = Symbol('controller_method')
+export const CONTROLLER_PARAM = Symbol('controller_param')
+export const CONTROLLER_METHOD = Symbol('controller_method')

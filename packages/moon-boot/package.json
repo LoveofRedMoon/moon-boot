@@ -1,12 +1,12 @@
 {
   "name": "moon-boot",
-  "version": "0.0.1-beta",
+  "version": "0.0.1",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rimraf dist && tsc -p ./tsconfig.json && node ../../scripts/fixTypes",
-    "boot-build": "cd ./packages/moon-boot && npm run build"
+    "publish": "npm run build && npm version patch && npm publish"
   },
   "dependencies": {
     "chalk": "^4.1.0",
