@@ -1,0 +1,35 @@
+{
+  "name": "moon-boot-packages",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "postinstall": "husky install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^5.0.9",
+    "lint-staged": "^10.5.4",
+    "prettier": "^2.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LoveofRedMoon/moon-boot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/LoveofRedMoon/moon-boot/issues"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": "prettier --write",
+    "*.ts": "prettier --parser=typescript --write"
+  }
+}
