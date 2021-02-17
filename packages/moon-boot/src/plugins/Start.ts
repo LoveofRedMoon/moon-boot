@@ -1,6 +1,6 @@
 import env, { readApplication } from './Env'
 import { configLog4js, getLogger } from './Log'
-import { scan } from './Scan'
+import { scan, scanDir, scanNode } from './Scan'
 import { trigger } from './Hooks'
 
 export interface StartOpt {
@@ -32,6 +32,8 @@ function conbineOpt(raw: string | StartOption): StartOpt {
 export async function start(option: string | StartOption) {
   // 初始化配置
   const opt = conbineOpt(option)
+  // 扫描node_modules
+  await scanNode()
   // 扫描全部目录
   await Promise.all(opt.scanDir.map((v) => scan(v)))
   await trigger('afterScan', opt)

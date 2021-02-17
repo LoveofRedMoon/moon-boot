@@ -1,13 +1,13 @@
 {
-  "name": "@moon-boot/plugin-express",
-  "version": "0.0.0",
+  "name": "@moonboot/plugin-express",
+  "version": "0.0.2",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rimraf dist && tsc -p ./tsconfig.json && node ../../scripts/fixTypes",
     "boot-build": "cd ./packages/moon-boot && npm run build",
-    "publish": "npm run build && npm version patch && npm publish"
+    "pub": "npm run build && npm publish --registry=https://registry.npmjs.org --access public"
   },
   "dependencies": {
     "express": "^4.17.1",
@@ -24,9 +24,9 @@
     "typescript": "^4.1.5"
   },
   "peerDependencies": {
-    "moon-boot": "^0.0.1-beta"
+    "moon-boot": "> 0.0.0"
   },
   "keywords": [],
-  "author": "",
+  "author": "CYJ",
   "license": "MIT"
 }

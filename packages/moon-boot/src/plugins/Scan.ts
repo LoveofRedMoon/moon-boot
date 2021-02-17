@@ -1,4 +1,4 @@
-import fs from 'fs-extra'
+import fs, { existsSync, readdirSync } from 'fs-extra'
 import { resolve } from 'path'
 
 /**
@@ -23,4 +23,18 @@ export async function scanDir(p: string) {
       }
     })
   )
+}
+
+export async function scanNode() {
+  let p = resolve(__dirname)
+  while (!existsSync(resolve(p, 'node_modules'))) {
+    const a = resolve(p, '..')
+    if (a === p) {
+      throw new Error('[moon] - cannot find node_modules')
+    }
+  }
+  try {
+    const dirs = readdirSync(resolve(p, 'node_modules', '@moonboot'))
+    return await Promise.all(dirs.map((v) => import(`@moonboot/${v}`)))
+  } catch {}
 }
