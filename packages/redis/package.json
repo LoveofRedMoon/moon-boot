@@ -1,6 +1,6 @@
 {
-  "name": "@moonboot/plugin-express",
-  "version": "0.0.4",
+  "name": "@moonboot/plugin-redis",
+  "version": "0.0.1",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,14 +9,14 @@
     "pub": "npm run build && npm publish --registry=https://registry.npmjs.org --access public"
   },
   "dependencies": {
-    "express": "^4.17.1",
     "chalk": "^4.1.0",
     "fs-extra": "^9.1.0",
-    "js-yaml": "^4.0.0",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "ioredis": "^4.22.0"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.7",
+    "@types/ioredis": "^4.19.3",
     "rimraf": "^3.0.2",
     "ts-node": "^9.1.1",
     "tslib": "^2.1.0",

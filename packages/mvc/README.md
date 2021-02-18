@@ -2,7 +2,7 @@
 
 ## What
 
-> A Project support mvc module for `moon-boot`
+> A Project support rest module for `moon-boot`
 
 ## How to use
 

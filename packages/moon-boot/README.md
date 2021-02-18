@@ -106,7 +106,7 @@ new Main()
 > See `@moon-boot/plugin-express` as example
 > If you want register, you must provide `bean` to be scaned from `index`
 
-1. `MVC` => `@moon-boot/plugin-express`
+1. `Rest` => `@moonboot/plugin-express`
    ```ts
    // This Moudle will auto use when installed
    // See project For More Information
@@ -126,6 +126,9 @@ new Main()
        return 'success'
      }
    }
+   ```
+2. `Redis` => `@moonboot/plugin-redis`
+   ```ts
    ```
 
 ### FAQ

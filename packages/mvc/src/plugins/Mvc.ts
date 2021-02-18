@@ -164,7 +164,7 @@ export async function resolveController(): Promise<void> {
               const needReturn = r.every((v) => v.type !== 'res')
               return async function (req, res, next) {
                 const paramMapper = r.map((v) => {
-                  switch (v.type) {
+                  switch (v?.type) {
                     case 'req':
                       return req
                     case 'res':
@@ -179,6 +179,8 @@ export async function resolveController(): Promise<void> {
                       return transformData(req.get(v.opts.name), v.opts.type)
                     case 'body':
                       return transformData(req.body, v.opts.type)
+                    default:
+                      return void 0
                   }
                 })
                 try {
@@ -200,7 +202,7 @@ export async function resolveController(): Promise<void> {
           )
         })
       } catch (e) {
-        console.log(e)
+        log.error(e)
         log.error(`[moon] - fail to register controller with ${c.class.name}`)
       }
     })

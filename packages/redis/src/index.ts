@@ -1,0 +1,1 @@
+import './bean/RedisTemplate'
