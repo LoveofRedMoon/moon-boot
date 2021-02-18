@@ -12,7 +12,7 @@ export interface Env {
   [key: string]: InfiRecrd
 }
 
-const env: Env = (function () {
+export const env: Env = (function () {
   const fn: any = function (this: Env, path: string): string {
     const ps = path.split('.')
     let d: any = env

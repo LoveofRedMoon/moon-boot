@@ -32,6 +32,7 @@ export async function scanNode() {
     if (a === p) {
       throw new Error('[moon] - cannot find node_modules')
     }
+    p = a
   }
   try {
     const dirs = readdirSync(resolve(p, 'node_modules', '@moonboot'))

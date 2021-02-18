@@ -102,6 +102,10 @@ new Main()
 
 ### Plugins
 
+> How to build plugins? 
+> See `@moon-boot/plugin-express` as example
+> If you want register, you must provide `bean` to be scaned from `index`
+
 1. `MVC` => `@moon-boot/plugin-express`
    ```ts
    // This Moudle will auto use when installed
@@ -128,6 +132,9 @@ new Main()
 
 Q: Why use `Decorator`
 A: Simple
+
+Q: Why not `nestjs`
+A: It works well, but in some case, It's too big.
 
 ### LifeCycle
 

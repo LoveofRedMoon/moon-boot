@@ -144,6 +144,7 @@ export function Next(): ParameterDecorator {
 
 export async function resolveController(): Promise<void> {
   const app = express()
+  app.use(express.json())
   await Promise.all(
     controllers.map(async (c) => {
       try {
