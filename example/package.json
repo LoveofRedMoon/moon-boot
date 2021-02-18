@@ -1,0 +1,23 @@
+{
+  "name": "moon-boot-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/index"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@moonboot/plugin-express": "^0.0.3",
+    "@moonboot/plugin-redis": "^0.0.1",
+    "moon-boot": "^0.0.3"
+  },
+  "devDependencies": {
+    "@types/ioredis": "^4.19.4",
+    "ts-node": "^9.1.1",
+    "tslib": "^2.1.0",
+    "typescript": "^4.1.5"
+  }
+}
