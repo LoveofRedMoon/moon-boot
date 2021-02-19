@@ -7,6 +7,6 @@ export class TestService {
   redisTemplate!: RedisTemplate
 
   test() {
-    return this.redisTemplate.client.get('abc')
+    return this.redisTemplate.get('abc')
   }
 }

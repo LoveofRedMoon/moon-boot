@@ -27,7 +27,7 @@ class TestService {
   redisTemplate!: RedisTemplate
 
   test() {
-    this.redisTemplate.client.mget('abc', 'key')
+    this.redisTemplate.mget('abc', 'key')
   }
 }
 ```
