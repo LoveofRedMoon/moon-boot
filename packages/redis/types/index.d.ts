@@ -1,4 +1,4 @@
-import { Redis, Cluster } from 'ioredis'
+import IoRedis from 'ioredis'
 /**
  * @Bean()
  * class TestService {
@@ -6,9 +6,5 @@ import { Redis, Cluster } from 'ioredis'
  *      redisTemplate!: RedisTemplate
  * }
  */
-export declare class RedisTemplate {
-  client: Redis
-}
-export declare class RedisClusterTemplate {
-  client: Cluster
-}
+export declare class RedisTemplate extends IoRedis {}
+export declare class RedisClusterTemplate extends IoRedis.Cluster {}

@@ -16,13 +16,9 @@ const log = getLogger(__filename)
   }
 })
 @Bean()
-export class RedisTemplate {
-  client: Redis
+export class RedisTemplate extends IoRedis {
   constructor() {
-    this.client = new IoRedis(JSON.parse(env('redis')))
-  }
-  close() {
-    this.client.disconnect()
+    super(JSON.parse(env('redis')))
   }
 }
 
@@ -34,12 +30,8 @@ export class RedisTemplate {
   }
 })
 @Bean()
-export class RedisClusterTemplate {
-  client: Cluster
+export class RedisClusterTemplate extends IoRedis.Cluster {
   constructor() {
-    this.client = new IoRedis.Cluster(JSON.parse(env('redis')))
-  }
-  close() {
-    this.client.disconnect()
+    super(JSON.parse(env('redis')))
   }
 }

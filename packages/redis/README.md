@@ -2,7 +2,7 @@
 
 ## What
 
-> A Project support redis for `moon-boot`
+> A Project support [redis](https://www.npmjs.com/package/ioredis) for `moon-boot`
 
 ## How to use
 
