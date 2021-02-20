@@ -1,5 +1,5 @@
 import { getLogger } from './Log'
-import { FIELDS, TYPE } from './SymbolGenerate'
+import { FIELDS, METHOD_TYPE, TYPE } from './SymbolGenerate'
 const log = getLogger(__filename)
 const GenericSymbol: Symbol[] = []
 export function Generic(index: number) {
@@ -11,17 +11,43 @@ export function Generic(index: number) {
   }
   return GenericSymbol[index]
 }
+export type MethodTypes = Array<{ key: string | symbol; type: TypeDefine[] }>
 export type Constructor = new (...args: any[]) => any
 export type TypeDefine = Constructor | Symbol | Array<TypeDefine>
 export type TypeDeal = Constructor | Array<TypeDeal>
+// 加在方法参数上, 表示对入参类型的注解, 不加时取类型
+export function Type(t: TypeDefine): ParameterDecorator
+// 加在参数入参上, 表示对参数类型的注解, 不加时取类型
 export function Type(t: TypeDefine): PropertyDecorator
+// 加在方法入参上, 表示对方法返回值的注解, 不加时取类型
 export function Type(t: TypeDefine): MethodDecorator
 export function Type(t: TypeDefine) {
   const ts = Array.isArray(t) ? t : [t]
   return function <T>(target: Object, key: string | symbol): void {
-    Reflect.defineMetadata(TYPE, ts, target, key)
-    if (arguments[2]) {
-      registerProperty(target, key)
+    switch (typeof arguments[2]) {
+      case 'undefined':
+        // MethodDecorator
+        Reflect.defineMetadata(TYPE, ts, target, key)
+        break
+      case 'number':
+        // ParameterDecorator
+        let complexParameters: MethodTypes | undefined = Reflect.getOwnMetadata(
+          METHOD_TYPE,
+          target,
+          key
+        )
+        if (!complexParameters) {
+          complexParameters = Reflect.hasMetadata(METHOD_TYPE, target, key)
+            ? Reflect.getMetadata(METHOD_TYPE, target, key).slice(0)
+            : []
+          Reflect.defineMetadata(METHOD_TYPE, complexParameters, target, key)
+        }
+        complexParameters![arguments[2]] = { key, type: ts }
+        break
+      default:
+        // PropertyDecorator
+        Reflect.defineMetadata(TYPE, ts, target, key)
+        registerProperty(target, key)
     }
   }
 }
@@ -34,6 +60,75 @@ export function registerProperty(target: Object, key: string | symbol) {
     Reflect.defineMetadata(FIELDS, complexFields, target)
   }
   complexFields.push(key)
+}
+/**
+ * For MethodDecorator && PropertyDecorator
+ * MethodDecorator returns ReturnType
+ * PropertyDecorator returns PropertyType
+ */
+export function getType(target: Object, key: string | symbol): TypeDefine[]
+/**
+ * For ParameterDecorator, returns position idx type
+ * @param idx method parameter index
+ */
+export function getType(
+  target: Object,
+  key: string | symbol,
+  idx: number
+): TypeDefine[]
+/**
+ *
+ * For ParameterDecorator, returns paramter name's type
+ * @param paramName method parameter name
+ */
+export function getType(
+  target: Object,
+  key: string | symbol,
+  paramName: string | symbol
+): TypeDefine[]
+/**
+ *
+ * For ParameterDecorator, returns all parameter types
+ */
+export function getType(
+  target: Object,
+  key: string | symbol,
+  paramName: null
+): TypeDefine[][]
+export function getType(
+  target: Object,
+  key: string | symbol,
+  which?: string | symbol | number | null
+): TypeDefine[] | TypeDefine[][] {
+  if (which === undefined) {
+    return (
+      Reflect.getMetadata(TYPE, target, key) ??
+      Reflect.getMetadata('desgin:type', target, key) ??
+      Reflect.getMetadata('design:returntype', target, key) ?? [Object]
+    )
+  } else if (typeof which === 'number') {
+    const types: MethodTypes | undefined =
+      Reflect.getOwnMetadata(METHOD_TYPE, target, key) ??
+      Reflect.getMetadata(METHOD_TYPE, target, key)
+    return (
+      types?.[which].type ??
+      Reflect.getMetadata('design:paramtypes', target, key)[which] ?? [Object]
+    )
+  } else if (which === null) {
+    const types: MethodTypes | undefined =
+      Reflect.getOwnMetadata(METHOD_TYPE, target, key) ??
+      Reflect.getMetadata(METHOD_TYPE, target, key)
+    return (
+      types?.map((v) => v.type) ??
+      Reflect.getMetadata('design:paramtypes', target, key) ??
+      []
+    )
+  } else {
+    const types: MethodTypes | undefined =
+      Reflect.getOwnMetadata(METHOD_TYPE, target, key) ??
+      Reflect.getMetadata(METHOD_TYPE, target, key)
+    return types?.find((v) => v.key === which)?.type ?? [Object]
+  }
 }
 function typeDealToString(type: TypeDeal[]) {
   return (

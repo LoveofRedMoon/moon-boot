@@ -25,11 +25,50 @@ export interface Env {
 /**
  * Data Transform Module
  */
+export function Generic(index: number): symbol
+export type MethodTypes = Array<{ key: string | symbol; type: TypeDefine[] }>
 export type Constructor = new (...args: any[]) => any
 export type TypeDefine = Constructor | Symbol | Array<TypeDefine>
 export type TypeDeal = Constructor | Array<TypeDeal>
+export function Type(t: TypeDefine): ParameterDecorator
+export function Type(t: TypeDefine): PropertyDecorator
+export function Type(t: TypeDefine): MethodDecorator
 export function transformData(raw: any, type?: TypeDeal): any
-
+export function registerProperty(target: Object, key: string | symbol): void
+/**
+ * For MethodDecorator && PropertyDecorator
+ * MethodDecorator returns ReturnType
+ * PropertyDecorator returns PropertyType
+ */
+export function getType(target: Object, key: string | symbol): TypeDefine[]
+/**
+ * For ParameterDecorator, returns position idx type
+ * @param idx method parameter index
+ */
+export function getType(
+  target: Object,
+  key: string | symbol,
+  idx: number
+): TypeDefine[]
+/**
+ *
+ * For ParameterDecorator, returns paramter name's type
+ * @param paramName method parameter name
+ */
+export function getType(
+  target: Object,
+  key: string | symbol,
+  paramName: string | symbol
+): TypeDefine[]
+/**
+ *
+ * For ParameterDecorator, returns all parameter types
+ */
+export function getType(
+  target: Object,
+  key: string | symbol,
+  paramName: null
+): TypeDefine[][]
 /**
  * Scan Module
  */
