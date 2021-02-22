@@ -146,6 +146,17 @@ function assertTypeOnlyOne(type: TypeDeal[], raw: any) {
     )
   }
 }
+export function typeDefine2TypeDeal(raw: TypeDefine): TypeDeal {
+  if (typeof raw === 'symbol') {
+    throw new Error(
+      `[moon] symbol '${raw.description}' can not transform to TypeDefine.`
+    )
+  }
+  if (Array.isArray(raw)) {
+    return raw.map(typeDefine2TypeDeal)
+  }
+  return raw as TypeDeal
+}
 function replaceGenericTypeWithSubTypes(raw: TypeDefine, sub: TypeDeal[]) {
   if (typeof raw === 'symbol') {
     const idx = GenericSymbol.indexOf(raw)

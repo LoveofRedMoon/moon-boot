@@ -1,17 +1,8 @@
-import { Pool } from 'mysql2/promise'
-import { EventEmitter } from 'events'
-/**
- * @Bean()
- * class TestService {
- *      @Autowired()
- *      mysqlTemplate!: MysqlTemplate
- * }
- */
-export declare class MysqlTemplate {
-  pool: Pool
-  execute: Pool['execute']
-  getConnection: Pool['getConnection']
-  on: Pool['on']
-  end: Pool['end']
-  query: Pool['query']
-}
+export type MYBATIS_SQL =
+  | string
+  | ((
+      data: any,
+      operator: { trim; where; set; choose }
+    ) => string | Array<string | undefined | null>)
+
+export function Select(sql: MYBATIS_SQL): MethodDecorator

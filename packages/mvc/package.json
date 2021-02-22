@@ -23,7 +23,7 @@
     "typescript": "^4.1.5"
   },
   "peerDependencies": {
-    "moon-boot": "> 0.0.2"
+    "moon-boot": "^0.0.5"
   },
   "keywords": [],
   "author": "CYJ",

@@ -23,7 +23,8 @@
     "typescript": "^4.1.5"
   },
   "peerDependencies": {
-    "moon-boot": "^0.0.3"
+    "moon-boot": "^0.0.4",
+    "@moonboot/plugin-mysql": "^0.0.1"
   },
   "keywords": [],
   "author": "CYJ",

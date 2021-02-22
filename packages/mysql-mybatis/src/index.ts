@@ -1,3 +1,2 @@
 import 'reflect-metadata'
-import './bean/MysqlTemplate'
-import './example/mapper'
+export * from './plugin/Mapper'

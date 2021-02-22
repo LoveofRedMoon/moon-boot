@@ -30,10 +30,15 @@ export type MethodTypes = Array<{ key: string | symbol; type: TypeDefine[] }>
 export type Constructor = new (...args: any[]) => any
 export type TypeDefine = Constructor | Symbol | Array<TypeDefine>
 export type TypeDeal = Constructor | Array<TypeDeal>
-export function Type(t: TypeDefine): ParameterDecorator
-export function Type(t: TypeDefine): PropertyDecorator
-export function Type(t: TypeDefine): MethodDecorator
+export function Type(
+  t: TypeDefine
+): <T>(
+  target: Object,
+  propertyKey: string | symbol,
+  which?: number | TypedPropertyDescriptor<T>
+) => void | TypedPropertyDescriptor<T>
 export function transformData(raw: any, type?: TypeDeal): any
+export function typeDefine2TypeDeal(raw: TypeDefine): TypeDeal
 export function registerProperty(target: Object, key: string | symbol): void
 /**
  * For MethodDecorator && PropertyDecorator
