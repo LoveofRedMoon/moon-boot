@@ -129,8 +129,56 @@ new Main()
    ```
 2. `Redis` => `@moonboot/plugin-redis`
    ```ts
+   @Bean()
+   class TestService {
+     @Autowired()
+     redisTemplate!: RedisTemplte
+
+     test() {
+       return this.redisTemplate.mget()
+     }
+   }
    ```
 
+3. `Mysql` => `@moonboot/plugin-mysql`
+   ```ts
+   @Bean()
+   class TestService {
+     @Autowired()
+     mysqlTemplate!: MysqlTemplate
+
+     test() {
+       return this.mysqlTemplate.query()
+     }
+   }
+   ```
+
+4. `Mysql` => `@moonboot/plugin-mysql-mybatis`
+   ```ts
+   // TestService
+   @Bean()
+   class TestService {
+     @Autowired()
+     testMapper!: TestMapper
+
+     test() {
+       return this.testMapper.query()
+     }
+   }
+   // TestMapper
+   class User {
+      @Alias('user_name')
+      userName: string
+   }
+   @Bean()
+   class TestMapper {
+     @Select('select 1 from dual')
+     @Type([Array, User])
+     test(): Promise<User[]> {
+       return this.testMapper.query()
+     }
+   }
+   ```
 ### FAQ
 
 Q: Why use `Decorator`
