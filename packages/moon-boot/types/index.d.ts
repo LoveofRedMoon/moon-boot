@@ -32,11 +32,13 @@ export type TypeDefine = Constructor | Symbol | Array<TypeDefine>
 export type TypeDeal = Constructor | Array<TypeDeal>
 export function Type(
   t: TypeDefine
-): <T>(
+): <T extends number | TypedPropertyDescriptor<any> | undefined>(
   target: Object,
   propertyKey: string | symbol,
-  which?: number | TypedPropertyDescriptor<T>
-) => void | TypedPropertyDescriptor<T>
+  which?: T
+) => T extends TypedPropertyDescriptor<infer P> ? void | T : void
+export function Alias(name: string | string[]): PropertyDecorator
+export declare const Snake2Camel: ClassDecorator
 export function transformData(raw: any, type?: TypeDeal): any
 export function typeDefine2TypeDeal(raw: TypeDefine): TypeDeal
 export function registerProperty(target: Object, key: string | symbol): void

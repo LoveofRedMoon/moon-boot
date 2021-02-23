@@ -1,12 +1,18 @@
+import { Select } from '@moonboot/plugin-mysql-mybatis'
 import { RedisTemplate } from '@moonboot/plugin-redis'
-import { Autowired, Bean } from 'moon-boot'
-
+import { Alias, Autowired, Bean, Type } from 'moon-boot'
+import { Snake2Camel } from '../../../packages/moon-boot/dist'
+@Snake2Camel
+class Developer {
+  @Type(String)
+  devCode!: string
+}
 @Bean()
 export class TestService {
-  @Autowired()
-  redisTemplate!: RedisTemplate
-
-  test() {
-    return this.redisTemplate.get('abc')
+  @Select('select dev_code from td_m_developer limit 1')
+  @Type([Array, Developer])
+  test(e?: any): Promise<Developer[]> {
+    console.log(e);
+    throw new Error()
   }
 }

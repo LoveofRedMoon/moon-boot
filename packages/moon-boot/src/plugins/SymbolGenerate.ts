@@ -7,3 +7,5 @@ export const BEFORE_BEAN = Symbol('beforeBean')
 export const CONDITION = Symbol('condition')
 
 export const FIELDS = Symbol('fields')
+export const ALIAS = Symbol('alias')
+export const CLASS_KEY_TRANSFORM = Symbol('class_key_transform')

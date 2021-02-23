@@ -1,5 +1,12 @@
+import { getReflectMetadataArr } from '../util/ReflectUtil'
 import { getLogger } from './Log'
-import { FIELDS, METHOD_TYPE, TYPE } from './SymbolGenerate'
+import {
+  ALIAS,
+  CLASS_KEY_TRANSFORM,
+  FIELDS,
+  METHOD_TYPE,
+  TYPE,
+} from './SymbolGenerate'
 const log = getLogger(__filename)
 const GenericSymbol: Symbol[] = []
 export function Generic(index: number) {
@@ -60,6 +67,78 @@ export function registerProperty(target: Object, key: string | symbol) {
     Reflect.defineMetadata(FIELDS, complexFields, target)
   }
   complexFields.push(key)
+}
+/**
+ * support alias names for property, default is key name
+ * when transformData, data's key in alias names will transform to this key
+ * @param name alias names for property
+ * @example
+ * class User {
+ *    @Alias('user_name')
+ *    @Type(String)
+ *    userName!: string
+ * }
+ * transformData({user_name:'Tom'}, User) => User { userName: 'Tom' }
+ */
+export function Alias(name: string | string[]): PropertyDecorator {
+  return function (target: Object, key: string | symbol) {
+    registerAlias(target, key, name)
+  }
+}
+/**
+ * Simple Type for Alias
+ * Will try transform snake_case to camelCase
+ */
+export const Snake2Camel: ClassDecorator = function (target) {
+  const arr: Function[] = getReflectMetadataArr(CLASS_KEY_TRANSFORM, target)
+  arr.push(function snakeCamel(v: string): string {
+    const a = v.replace(/_([a-z])/g, (v, v1) => v1.toUpperCase())
+    return a === v ? '' : a
+  })
+}
+/**
+ * Simple Type for Alias
+ * Will try transform camelCase to snake_case
+ */
+export const Camel2Snake: ClassDecorator = function (target) {
+  const arr: Function[] = getReflectMetadataArr(CLASS_KEY_TRANSFORM, target)
+  arr.push(function snakeCamel(v: string): string {
+    const a = v.replace(/.([A-Z]))/g, (v, v1) => '_' + v1.toLowerCase())
+    return a === v ? '' : a
+  })
+}
+/**
+ * Alias Function
+ * Will pass remoteKey to cb, When returns non-blank string, it could be key
+ */
+export function AliasKeyTransform(
+  cb: (remoteKey: string) => string
+): ClassDecorator {
+  return function (target) {
+    getReflectMetadataArr(CLASS_KEY_TRANSFORM, target).push(cb)
+  }
+}
+function registerAlias(
+  target: Object,
+  key: string | symbol,
+  name: string | string[]
+) {
+  const n = Array.isArray(name) ? name : [name]
+  const alias:
+    | Record<string, string | symbol>
+    | undefined = Reflect.getMetadata(ALIAS, target)
+  if (alias) {
+    n.forEach((v) => (alias[v] = key))
+  } else {
+    Reflect.defineMetadata(
+      ALIAS,
+      n.reduce(
+        (p, v) => ((p[v] = key), p),
+        {} as Record<string, string | symbol>
+      ),
+      target
+    )
+  }
 }
 /**
  * For MethodDecorator && PropertyDecorator
@@ -281,21 +360,26 @@ export function transformData(raw: any, type?: TypeDeal): any {
     }
     const i = new firstType()
     const subTypes = type.slice(1)
+    const alias: Record<string, string | symbol> =
+      Reflect.getMetadata(ALIAS, i) ?? {}
+    const aliasTry = Reflect.getMetadata(CLASS_KEY_TRANSFORM, firstType)
+    const dealKeys = new Set<string | symbol>()
     Object.keys(j).forEach((k) => {
-      const types = (Reflect.getMetadata(TYPE, i, k) as
-        | TypeDefine[]
-        | undefined) || [
-        Reflect.getMetadata('design:type', i, k) as Constructor,
-      ]
+      const key = getAliasKey(k, alias, aliasTry)
+      const types: TypeDefine[] | undefined = getType(i, key)
 
       if (types && types[0]) {
-        i[k] = transformData(
+        i[key] = transformData(
           j[k],
           types.map((v) => replaceGenericTypeWithSubTypes(v, subTypes))
         )
       } else {
-        i[k] = j[k]
+        i[key] = j[k]
       }
+      if (dealKeys.has(key)) {
+        log.warn(`[moon] - transform data with multi alias \`${k}\` WARN.`)
+      }
+      dealKeys.add(key)
     })
     return i
   }
@@ -304,4 +388,22 @@ export function transformData(raw: any, type?: TypeDeal): any {
       type
     )} because type ${typeof raw} is not suporrted.`
   )
+}
+
+function getAliasKey(
+  rawKey: string,
+  alias: Record<string, string | symbol>,
+  aliasTry: Array<(v: string) => string>
+): string | symbol {
+  const a = alias[rawKey]
+  if (a) {
+    return a
+  }
+  for (let i = aliasTry.length; i--; ) {
+    const b = aliasTry[i](rawKey)
+    if (b) {
+      return b
+    }
+  }
+  return rawKey
 }
