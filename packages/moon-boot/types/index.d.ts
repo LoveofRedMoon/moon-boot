@@ -21,6 +21,7 @@ export interface Env {
   (path: string): string
   [key: string]: InfiRecrd
 }
+export function readAndSet(data: any, newData: any): void | any[]
 
 /**
  * Data Transform Module

@@ -13,7 +13,7 @@ export interface Env {
 }
 
 export const env: Env = (function () {
-  const fn: any = function (this: Env, path: string): string {
+  const fn: any = function (path: string): string {
     const ps = path.split('.')
     let d: any = env
     for (let i = 0, len = ps.length; i < len; i++) {
@@ -40,7 +40,7 @@ const blank = Function.prototype
  * @param data
  * @param newData
  */
-function readAndSet(data: any, newData: any): void | any[] {
+export function readAndSet(data: any, newData: any): void | any[] {
   if (Array.isArray(newData)) {
     return newData.map((value) => {
       if (value === void 0 || value === null) {

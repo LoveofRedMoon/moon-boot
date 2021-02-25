@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "rimraf dist && tsc -p ./tsconfig.json && node ../../scripts/fixTypes",
+    "build": "rimraf dist -G && tsc -p ./tsconfig.json && node ../../scripts/fixTypes",
     "pub": "npm run build && npm publish --registry=https://registry.npmjs.org"
   },
   "dependencies": {

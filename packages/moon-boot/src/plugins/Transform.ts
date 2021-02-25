@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import { getReflectMetadataArr } from '../util/ReflectUtil'
 import { getLogger } from './Log'
 import {
