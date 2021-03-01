@@ -30,7 +30,7 @@ function registerValue(target: Object, key: string | symbol) {
   if (p) {
     const m = p.indexOf(':')
     const pre = m > -1 ? env(p.substring(0, m)) : env(p)
-    if (pre !== null && pre !== void 0) {
+    if (pre !== null && pre !== void 0 && pre !== '') {
       const newVal = transformData(pre, types)
       if (newVal !== target[key]) {
         target[key] = newVal

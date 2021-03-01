@@ -1,6 +1,6 @@
 {
   "name": "@moonboot/plugin-redis",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,7 +23,7 @@
     "typescript": "^4.1.5"
   },
   "peerDependencies": {
-    "moon-boot": ">=0.0.5"
+    "moon-boot": ">=0.0.6"
   },
   "keywords": [],
   "author": "CYJ",

@@ -109,8 +109,9 @@ export interface AutowiredOption {
   required?: boolean
   name?: string | symbol
 }
-export function getBeanInstance(type: new (...args: any[]) => any): Promise<any>
+export function getBeanInstance<T>(type: new (...args: any[]) => T): Promise<T>
 export function getBeanInstance(name: string | symbol): Promise<any>
+export function reInjectAll(): Promise<void>
 export function Value(p: string, opt?: ValueOption): PropertyDecorator
 export function Autowired(
   name?: string | AutowiredOption,

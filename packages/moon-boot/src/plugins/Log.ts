@@ -25,6 +25,8 @@ export function configLog4js() {
     })
   }
 }
+// Give default config, Otherwise log4js will not output for level OFF
+configLog4js()
 
 export function getLogger(path: string) {
   const g = path.split(/[\\\/]/g)

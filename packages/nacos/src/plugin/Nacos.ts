@@ -1,11 +1,40 @@
-import { Bean, Condition, getBeanInstance, Value } from 'moon-boot'
+import {
+  AfterEnv,
+  AfterStart,
+  Bean,
+  Condition,
+  env,
+  getBeanInstance,
+  getLogger,
+  readAndSet,
+  reInjectAll,
+  Value,
+} from 'moon-boot'
 import md5 from 'blueimp-md5'
 import os from 'os'
 import { EventEmitter } from 'events'
-import axios from 'axios'
+import Axios from 'axios'
+import jsYaml from 'js-yaml'
+
+const log = getLogger(__filename)
+
+const axios = Axios.create()
+axios.interceptors.response.use(void 0, (err) => {
+  log.error(err)
+  throw err
+})
+
+async function sleep(time: number): Promise<void> {
+  return new Promise((r) => setTimeout(r, time))
+}
 
 export const EnableNacosDiscovery: ClassDecorator = function (target) {
-  getBeanInstance(NacosDiscovery)
+  class __DiscoveryNacos__ {
+    @AfterStart()
+    async start() {
+      ;(await getBeanInstance(NacosDiscovery))._listen()
+    }
+  }
 }
 
 function getIPAdress(): string {
@@ -22,7 +51,7 @@ function getIPAdress(): string {
       return alias.address
     }
   }
-  return '127.0.0.1'
+  throw new Error('[moon] - can not get IP Address. Please Choose Ip manually.')
 }
 
 export interface NormalDiscoveryParam {
@@ -66,7 +95,7 @@ export interface QueryDiscoveryResult {
   clusters: string
 }
 
-@Condition((env) => !!env('server.port') && !!env('nacos.discovery'))
+@Condition((env) => !!env('nacos.discovery'))
 @Bean()
 export class NacosDiscovery {
   @Value('nacos.discovery.url')
@@ -99,7 +128,7 @@ export class NacosDiscovery {
   @Value('nacos.discovery.ephemeral:false', { type: Boolean })
   ephemeral!: boolean
 
-  @Value('server.port')
+  @Value('server.port:8080')
   port!: string
 
   @Value('nacos.discovery.ip:')
@@ -107,13 +136,7 @@ export class NacosDiscovery {
 
   private _beatflag: boolean = false
 
-  constructor(auto = true) {
-    if (auto) {
-      this._listen()
-    }
-  }
-
-  private async _listen() {
+  public async _listen() {
     await this.register()
     process.on('beforeExit', async () => {
       this._beatflag = false
@@ -124,9 +147,18 @@ export class NacosDiscovery {
   }
   private async _beat() {
     if (this._beatflag) {
+      await sleep(10000)
       this.beat({
         serviceName: this.serviceName,
-        beat: JSON.stringify({}),
+        namespaceId: this.namespaceId,
+        clusterName: this.clusterName,
+        beat: JSON.stringify({
+          ip: this.ip || getIPAdress(),
+          port: this.port,
+          serviceName: this.serviceName,
+          weight: this.weight,
+          ephemeral: this.ephemeral || void 0,
+        }),
       }).then(this._beat.bind(this))
     }
   }
@@ -217,13 +249,15 @@ export class NacosDiscovery {
   }
   async beat(param: {
     serviceName: string
+    namespaceId?: string
+    clusterName?: string
     groupName?: string
     ephemeral?: string
     beat: string
   }): Promise<string> {
     return axios
       .put(
-        '/nacos/v1/ns/instance/beat',
+        this.url + '/nacos/v1/ns/instance/beat',
         {},
         {
           params: param,
@@ -239,6 +273,31 @@ export interface NormalConfigParam {
   group?: string
 }
 
+class __ConfigEnv__ {
+  @AfterEnv()
+  async listen() {
+    try {
+      const instance = await getBeanInstance(NacosConfig)
+      instance.on(NacosConfig.ConfigUpdateKey, (data: string) => {
+        log.info('[moon] - nacos config updated.')
+        log.debug(data)
+        try {
+          const d: any = jsYaml.load(data)
+          readAndSet(env, d)
+          log.info('[moon] - nacos config update env success.')
+          reInjectAll()
+        } catch (e) {
+          log.error(e)
+        }
+      })
+      instance._listen()
+    } catch (e) {
+      log.error('[moon] - can not load nacos config.')
+    }
+  }
+}
+
+@Condition((env) => !!env('nacos.config'))
 @Bean()
 export class NacosConfig extends EventEmitter {
   public static ConfigUpdateKey = 'configUpdate'
@@ -251,19 +310,12 @@ export class NacosConfig extends EventEmitter {
   @Value('nacos.config.dataId')
   dataId!: string
 
-  @Value('nacos.config.group')
+  @Value('nacos.config.group:DEFAULT_GROUP')
   group!: string
 
   private _config: string = ''
 
-  constructor(auto = true) {
-    super()
-    if (auto) {
-      this._listen()
-    }
-  }
-
-  private _listen() {
+  public _listen() {
     this.listen()
       .then((v) => {
         if (v) {
