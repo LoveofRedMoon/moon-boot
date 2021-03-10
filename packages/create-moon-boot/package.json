@@ -1,0 +1,30 @@
+{
+  "name": "create-moon-boot",
+  "version": "0.0.1",
+  "description": "Quick create moon-boot example.",
+  "main": "create-moon-boot.js",
+  "scripts": {
+    "pub": "npm publish --registry=https://registry.npmjs.org --access public"
+  },
+  "bin": "./create-moon-boot.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LoveofRedMoon/moon-boot/tree/master/packages/create-moon-boot"
+  },
+  "keywords": [
+    "moon-boot",
+    "IOC",
+    "nodejs",
+    "typescript"
+  ],
+  "author": "CYJ",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "commander": "^7.1.0",
+    "fs-extra": "^9.1.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.8"
+  }
+}
