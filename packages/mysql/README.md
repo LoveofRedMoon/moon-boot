@@ -33,6 +33,12 @@ class TestService {
 }
 ```
 
+#### With npx
+
+```bash
+$ npx create-moon-boot use plguin-mysql
+```
+
 ### Decorator
 
 ### FAQ

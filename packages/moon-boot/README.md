@@ -29,6 +29,12 @@ new Main()
 
 > We suggest the second way to use this. For `Decorator` is easy to use with less code, is right?
 
+#### Create with npx
+
+```bash
+$ npx create-moon-boot myProject
+```
+
 ### Decorator
 
 1. LifeCycleHooks

@@ -1,14 +1,14 @@
-# @moonboot/plugin-mysql
+# @moonboot/plugin-mysql-mybatis
 
 ## What
 
-> A Project support [mysql2](https://www.npmjs.com/package/mysql2) for `moon-boot`
+> A Project support Simple Sql For `moon-boot` Align with `@moonboot/plugin-mysql`
 
 ## How to use
 
-> `npm i @moonboot/plugin-mysql`
+> `npm i @moonboot/plugin-mysql-mybatis`
 
-> Then you can use mysql with `MysqlTemplate` as the following example.
+> Then you can use mysql with `@Select` as the following example.
 
 ```ts
 // This Moudle will auto use when installed
@@ -24,13 +24,19 @@ new Main()
 // service.ts
 @Bean()
 class TestService {
-  @Autowired()
-  mysqlTemplate!: MysqlTemplate
-
-  test() {
-    this.mysqlTemplate.query('select 1 from dual')
+  @Select('select dev_code from td_m_developer limit 1')
+  @Type([Array, Developer])
+  test(e?: any): Promise<Developer[]> {
+    // Fallback Call
+    console.log(e);
+    throw new Error()
   }
 }
+```
+
+#### With npx
+```bash
+$ npx create-moon-boot use plugin-mysql-mybatis
 ```
 
 ### Decorator
@@ -39,7 +45,3 @@ class TestService {
 
 ### Param
 
-1. `redis.cluster = false`
-   useCluster or not, default is `false`
-2. `redis...`
-   The config under `redis` will pass to `new IoRedis() / new IoRedis.Cluster()`

@@ -30,6 +30,12 @@ class TestController {
 }
 ```
 
+#### With npx
+
+```bash
+$ npx create-moon-boot use plugin-express
+```
+
 ### Decorator
 
 1. `@Controller`
