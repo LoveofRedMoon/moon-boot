@@ -31,6 +31,10 @@ class TestService {
   }
 }
 ```
+#### With npx
+```bash
+$ npx create-moon-boot use plugin-redis
+```
 
 ### Decorator
 
