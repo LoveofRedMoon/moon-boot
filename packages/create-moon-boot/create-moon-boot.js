@@ -118,7 +118,9 @@ async function installPlugin(pluginName) {
   }
   await exec(`npm i @moonboot/${pluginName}`)
   try {
-    const data = require('@moonboot/plugin-express/example')
+    const data = require(require.resolve(`@moonboot/${pluginName}/example`, {
+      paths: [basePath],
+    }))
     await Promise.all(
       Object.entries(data.files ?? {}).map(async ([file, dest]) => {
         const destPath = path.resolve(basePath, dest)
@@ -156,75 +158,7 @@ async function installPlugin(pluginName) {
       )
     )
     console.table(data.env)
-  } catch (e) {
-    console.log(e)
-  }
-  return
-  await fs.mkdir(basePath)
-  await exec('npm init -y', { cwd: basePath })
-  console.log(chalk.yellowBright(`installing ...`))
-  await exec('npm i ts-node typescript tslib -D', { cwd: basePath })
-  await exec('npm i moon-boot', { cwd: basePath })
-  await fs.mkdirp(path.resolve(basePath, 'src'))
-  await fs.writeFile(
-    path.resolve(basePath, 'tsconfig.json'),
-    `\
-{
-  "compilerOptions": {
-    "target": "es2020",
-    "module": "commonjs",
-    "sourceMap": false,
-    "outDir": "./dist",
-    "removeComments": true,
-    "strict": true,
-    "noImplicitAny": false,
-    "strictNullChecks": true,
-    "alwaysStrict": true,
-    "moduleResolution": "node",
-    "baseUrl": "./src",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "paths": {
-      "@/*": [
-        "src/*"
-      ]
-    },
-  },
-  "include": [
-    "src/**/*"
-  ],
-}`
-  )
-  await fs.writeFile(
-    path.resolve(basePath, 'src/index.ts'),
-    `\
-import { start } from 'moon-boot'
-class Main {
-    constructor() {
-        start(__dirname)
-    }
-}
-
-new Main()`
-  )
-  await addScript(
-    path.resolve(basePath, 'package.json'),
-    'start',
-    'ts-node src/index'
-  )
-  console.log(
-    chalk.yellowBright(`project ${projectName} create success.
-
-following steps below to start.
-> cd ${projectName}
-> npm run start
-
-To use plugins, try
-> cd ${projectName}
-> npx create-moon-boot use plugin-express`)
-  )
+  } catch {}
 }
 
 function exec(command, options) {
