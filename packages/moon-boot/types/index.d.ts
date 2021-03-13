@@ -1,4 +1,9 @@
 import type { Logger } from 'log4js'
+import type {
+  RecurrenceRule,
+  RecurrenceSpecDateRange,
+  RecurrenceSpecObjLit,
+} from 'node-schedule'
 
 /**
  * Start Module
@@ -126,3 +131,29 @@ export function Condition(
 ): ClassDecorator
 
 export declare const env: Env
+
+/**
+ * Schedule Module
+ */
+export type ScheduleRule =
+  | RecurrenceRule
+  | RecurrenceSpecDateRange
+  | RecurrenceSpecObjLit
+  | Date
+  | string
+  | number
+export function Schedule(rule: ScheduleRule): MethodDecorator
+export function Schedule(name: string, rule: ScheduleRule): MethodDecorator
+export function cancelJob(
+  name: string,
+  reschedule?: boolean | undefined
+): boolean | undefined
+export function cancelNext(
+  name: string,
+  reschedule?: boolean | undefined
+): boolean | undefined
+export function reschedule(
+  name: string,
+  spec: string | number | RecurrenceRule
+): boolean | undefined
+export function nextInvocation(name: string): Date | undefined

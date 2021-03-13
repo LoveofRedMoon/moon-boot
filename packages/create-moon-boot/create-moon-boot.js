@@ -143,6 +143,7 @@ async function installPlugin(pluginName) {
           console.log(chalk.redBright('```ts'))
           console.log((await fs.readFile(file)).toString('utf-8'))
           console.log(chalk.redBright('```'))
+          return
         } catch {}
         await fs.copyFile(file, destPath)
         console.log(

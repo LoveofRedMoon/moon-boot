@@ -1,6 +1,6 @@
 {
   "name": "moon-boot",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,15 +13,24 @@
     "fs-extra": "^9.1.0",
     "js-yaml": "^4.0.0",
     "log4js": "^6.3.0",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "node-schedule": "^2.0.0"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.7",
     "@types/js-yaml": "^4.0.0",
+    "@types/node-schedule": "^1.3.1",
     "rimraf": "^3.0.2",
     "ts-node": "^9.1.1",
     "tslib": "^2.1.0",
     "typescript": "^4.1.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LoveofRedMoon/moon-boot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/LoveofRedMoon/moon-boot/issues"
   },
   "keywords": [],
   "author": "CYJ",

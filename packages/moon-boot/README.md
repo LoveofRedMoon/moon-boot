@@ -106,9 +106,22 @@ $ npx create-moon-boot myProject
    class TestService {}
    ```
 
+7. `@Schedule`
+   Support [`node-schedule`](https://www.npmjs.com/package/node-schedule) timed task for `moon-boot`
+
+   ```ts
+   @Bean()
+   class TestService {
+     @Schedule('0 * * * * *')
+     test() {
+       return 'run in cron'
+     }
+   }
+   ```
+
 ### Plugins
 
-> How to build plugins? 
+> How to build plugins?
 > See `@moon-boot/plugin-express` as example
 > If you want register, you must provide `bean` to be scaned from `index`
 
@@ -134,6 +147,7 @@ $ npx create-moon-boot myProject
    }
    ```
 2. `Redis` => `@moonboot/plugin-redis`
+
    ```ts
    @Bean()
    class TestService {
@@ -147,6 +161,7 @@ $ npx create-moon-boot myProject
    ```
 
 3. `Mysql` => `@moonboot/plugin-mysql`
+
    ```ts
    @Bean()
    class TestService {
@@ -160,6 +175,7 @@ $ npx create-moon-boot myProject
    ```
 
 4. `Mysql` => `@moonboot/plugin-mysql-mybatis`
+
    ```ts
    // TestService
    @Bean()
@@ -173,8 +189,8 @@ $ npx create-moon-boot myProject
    }
    // TestMapper
    class User {
-      @Alias('user_name')
-      userName: string
+     @Alias('user_name')
+     userName: string
    }
    @Bean()
    class TestMapper {
@@ -185,6 +201,7 @@ $ npx create-moon-boot myProject
      }
    }
    ```
+
 ### FAQ
 
 Q: Why use `Decorator`
